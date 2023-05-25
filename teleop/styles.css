@@ -16,7 +16,7 @@
     margin-left: -70px;
 }
 
-body {
+body #teleop {
     display:flex;
     justify-content: center;
 }
