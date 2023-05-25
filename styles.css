@@ -1,0 +1,22 @@
+.up-down, .extend-retract, .grip {
+    display:flex;
+    flex-direction: column;
+    width: 130px;
+}
+
+.wasd {
+    margin-left: 100px;
+}
+
+.forward {
+    margin: auto;
+}
+
+.left-right {
+    margin-left: -70px;
+}
+
+body {
+    display:flex;
+    justify-content: center;
+}
