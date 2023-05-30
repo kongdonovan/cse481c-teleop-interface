@@ -4,8 +4,9 @@ import rospy
 import actionlib
 import sys
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
-from geometry_msgs.import Quaternion
+from geometry_msgs.msg import Quaternion
 from tf import transformations
+import json
 
 class StretchNavigation:
     """
@@ -74,4 +75,10 @@ if __name__ == '__main__':
     rospy.init_node('navigation', argv=sys.argv)
     nav = StretchNavigation()
     # all this code does is move the robot forward 0.5 meters
-    nav.go_to(0.5, 0.0, 0.0)
+    print('what pose do you want to go to?')
+    pose = input()
+    file = open("positions.json", "r")
+    poses = json.load(file)
+
+    specific_pose = poses[pose]
+    nav.go_to(specific_pose["x"], specific_pose["y"], specific_pose["z"])
