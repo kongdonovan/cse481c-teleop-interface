@@ -81,7 +81,7 @@ def parse_pose(nav, data):
         nav.go_to(specific_pose["x"], specific_pose["y"], specific_pose["z"])
 
 if __name__ == '__main__':
-    rospy.init_node('navigation', argv=sys.argv)
+    rospy.init_node('navigation')
     nav = StretchNavigation()
 
     rospy.Subscriber('get_medicine', String, lambda data: parse_pose(nav, data))
