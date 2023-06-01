@@ -23,11 +23,10 @@ def save_pos(position_name, headers, values, save_file):
 
     except (FileNotFoundError, json.JSONDecodeError):
         poses = {}
-    
+
     poses[position_name] = {}
     for i in range(len(headers)):
         poses[position_name][headers[i]] = values[i]
-    
 
     open(save_file, "w").write(json.dumps(poses, indent=4))
 
