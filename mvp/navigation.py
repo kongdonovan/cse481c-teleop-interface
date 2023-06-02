@@ -76,7 +76,8 @@ class StretchNavigation:
 def parse_pose(nav, data):
     file = open("positions.json", "r")
     poses = json.load(file)
-    specific_pose = poses[data]
+    print(poses)
+    specific_pose = poses[data.data]
     if specific_pose:
         nav.go_to(specific_pose["x"], specific_pose["y"], specific_pose["z"])
 
@@ -84,6 +85,6 @@ if __name__ == '__main__':
     rospy.init_node('navigation')
     nav = StretchNavigation()
 
-    rospy.Subscriber('get_medicine', String, lambda data: parse_pose(nav, data))
+    rospy.Subscriber('meds_topic', String, lambda data: parse_pose(nav, data))
 
     rospy.spin()

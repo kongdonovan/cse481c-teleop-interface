@@ -1,4 +1,0 @@
-<launch>
-    <node name="navigation" type="mvp/navigation.py">
-    <node name="get_medicine" type="ros-system.backend.py">
-</launch>

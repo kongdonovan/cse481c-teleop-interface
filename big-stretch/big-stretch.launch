@@ -1,0 +1,4 @@
+<launch>
+    <node name="navigation" type="mvp/navigation.py" pkg="big-stretch"/>
+    <node name="get_medicine" type="ros-system.backend.py" pkg="big-stretch"/>
+</launch>

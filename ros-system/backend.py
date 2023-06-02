@@ -4,8 +4,6 @@ import rospy
 from std_msgs.msg import String
 import medicine_node
 
-node = medicine_node.GetMedicine() # this stays global
-
 # import stretch_body.robot
 
 # robot=stretch_body.robot.Robot()
@@ -85,9 +83,12 @@ node = medicine_node.GetMedicine() # this stays global
 def get_medicine_1():
     args = request.args
     medicine_type = args.get('type')
-    node.sendMessage(medicine_node) # send the
+    #node = medicine_node.GetMedicine() # this stays global
 
     return "done"
 
 if __name__ == '__main__':
+    node = medicine_node.GetMedicine()
+    node.sendMessage("origin") # send the
     app.run(host="172.28.7.121")
+    
