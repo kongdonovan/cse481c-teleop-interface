@@ -1,0 +1,32 @@
+{
+    "home": {
+        "arm_height": 0.5998961705003802,
+        "arm_length": 0.10000367056985685,
+        "is_gripped": false
+    },
+    "raise_arm": {
+        "arm_height": 0.7922928368025857,
+        "arm_length": 0.10000606469070243,
+        "is_gripped": false
+    },
+    "extend_arm": {
+        "arm_height": 0.7922878097833566,
+        "arm_length": 0.24040458501695014,
+        "is_gripped": false
+    },
+    "grip": {
+        "arm_height": 0.7922928368025857,
+        "arm_length": 0.24041175429685932,
+        "is_gripped": true
+    },
+    "retract_arm": {
+        "arm_height": 0.7922961152933872,
+        "arm_length": 0.0026246958577361423,
+        "is_gripped": true
+    },
+    "release": {
+        "arm_height": 0.7922845312925549,
+        "arm_length": 0.23841254564714467,
+        "is_gripped": false
+    }
+}

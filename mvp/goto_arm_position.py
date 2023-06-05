@@ -5,6 +5,7 @@ import hello_helpers.hello_misc as hm
 from std_msgs.msg import String
 import time
 import json
+import ast
 
 class MovePosCommand(hm.HelloNode):
   '''
@@ -34,9 +35,9 @@ class MovePosCommand(hm.HelloNode):
     trajectory_goal.trajectory.header.stamp = rospy.Time(0.0)
     trajectory_goal.trajectory.header.frame_id = 'base_link'
 
-    if position_values["gripper"] == True:
-      # then do a little extra to grip
-      pass
+    # if position_values["gripper"] == True:
+    #   # then do a little extra to grip
+    #   pass
 
     self.trajectory_client.send_goal(trajectory_goal)
     rospy.loginfo('Sent goal = {0}'.format(trajectory_goal))
@@ -50,15 +51,21 @@ class MovePosCommand(hm.HelloNode):
     # grip the gripper until a certain effort threshold
     pass
 
-  def main(self, poses):
+  def do_stuff(self, poses):
+    for pose in ast.literal_eval(poses.data):
+      self.issue_move_pos_command(pose)
+    pub = rospy.Publisher('arm_pose_topic_done', String, queue_size=10)
+    pub.publish("done!")
+
+  def main(self):
     '''
     Function that initiates move_pos_command function.
     :param self: The self reference.
     '''
     hm.HelloNode.main(self, 'move_pos_command', 'move_pos_command', wait_for_first_pointcloud=False)
+    rospy.Subscriber('arm_pose_topic', String, self.do_stuff) # array of poses
     rospy.loginfo('moving...')
-    for pose in list(poses):
-      self.issue_move_pos_command(pose)
+    
     
     time.sleep(2)
 
@@ -66,8 +73,7 @@ class MovePosCommand(hm.HelloNode):
 if __name__ == '__main__':
   try:
     node = MovePosCommand()
-    rospy.init_node('arm_pose')
-    rospy.Subscriber('arm_pose_topic', String, node.main) # array of poses
+    node.main()
     rospy.spin()
   except KeyboardInterrupt:
     rospy.loginfo('interrupt received, so shutting down')

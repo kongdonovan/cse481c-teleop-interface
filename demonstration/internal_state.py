@@ -3,7 +3,9 @@ from sensor_msgs.msg import JointState
 
 class InternalState:
   def __init__(self):
-    rospy.Subscriber('stretch/joint_states', JointState, lambda data: self.set_state(data))
+    self.data = None
+    rospy.Subscriber('stretch/joint_states', JointState, self.set_state)
+    rospy.sleep(1)
 
   def set_state(self, new_data):
     self.data = new_data
