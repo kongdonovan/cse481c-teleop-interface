@@ -1,6 +1,7 @@
 import tf2_listener
 import rospy
 import json
+import internal_state
 
 rospy.init_node("tf2_listener", anonymous=True) # initialize a ros node in order to subscribe to stuff properly
 
@@ -9,6 +10,10 @@ listener = tf2_listener.FrameListener()
 arm_height_pose = listener.get_pos()
 
 arm_extend_pose = listener.get_pos_extend()
+
+grip_pose = internal_state.InternalState()
+
+is_gripped = grip_pose.get_state().effort[4] < -6
 
 # grip = listener.get_grip() # we might not use this, instead decide whether it's gripping based on effort
 
@@ -31,8 +36,11 @@ def save_pos(position_name, headers, values, save_file):
     poses[position_name] = {}
     # for i in range(len(headers)):
     #     poses[position_name][headers[i]] = values[i]
+
+    # save the arm height and arm length
     poses[position_name]["arm_height"] = (-0.96327442199873 * (arm_height * 10000)) + 0.84537076355
     poses[position_name]["arm_length"] = (-0.98428984945135 * arm_extend) - 0.275424259395
+    poses[position_name]["is_gripped"] = is_gripped
     
 
     open(save_file, "w").write(json.dumps(poses, indent=4))

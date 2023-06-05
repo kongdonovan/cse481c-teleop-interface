@@ -72,19 +72,50 @@ class StretchNavigation:
         else:
             rospy.loginfo('{0}: FAILED in reaching the goal.'.format(self.__class__.__name__))
 
-
-def parse_pose(nav, data):
+# change this to send a sequence of poses
+def send_base_to_move(nav, pose):
+    # open the json and parse it
     file = open("positions.json", "r")
     poses = json.load(file)
-    print(poses)
-    specific_pose = poses[data.data]
+    poses_to_send = None
+
+    # access the pose we want to go to
+    specific_pose = poses[pose.data]
     if specific_pose:
+        # then go to that pose
         nav.go_to(specific_pose["x"], specific_pose["y"], specific_pose["z"])
+        
+
+def send_arm_to_move(back):
+    poses_to_send = None
+    if back:
+        # this is if we are dropping off
+        poses_to_send = ["raise_arm", "extend_arm", "release", "retract_arm"] # hardcoded, we can factor this out later
+    else:
+        # this is if we are picking up
+        poses_to_send = ["release", "raise_arm", "extend_arm", "grip", "retract_arm"] # hardcoded, we can factor this out later
+        
+    pose_publisher = rospy.Publisher('arm_pose_topic', String, queue_size=10) # initialize the publisher
+    pose_publisher.publish(str(poses_to_send)) # then publish to the right topic
+    
+
+def execute_movements(data):
+    # assume the robot is at medicine. send the arm to pick up medicine
+    nav = StretchNavigation() # this just allows us to move the robot
+    send_arm_to_move(False) # move the arm to pick up the medicine
+    rospy.wait_for_message('arm_pose_topic') # this waits for the done signal
+    send_base_to_move(nav, "user") # this signifies the navigating to medicine
+    send_arm_to_move(True) # this moves the arm to drop off medicine
+    rospy.wait_for_message('arm_pose_topic') # this waits for the done signal
+    send_base_to_move(nav, "medicine_storage") # move the base to go back to the medicine storage
+    pose_publisher = rospy.Publisher('meds_done', String, queue_size=10) # initialize the publisher
+    pose_publisher.publish("done!") # then publish to the right topic
+    
 
 if __name__ == '__main__':
     rospy.init_node('navigation')
     nav = StretchNavigation()
 
-    rospy.Subscriber('meds_topic', String, lambda data: parse_pose(nav, data))
+    rospy.Subscriber('meds_topic', String, execute_movements) # this tells us what medicine we want
 
     rospy.spin()

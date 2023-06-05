@@ -50,7 +50,7 @@
         });
 
         var msg = new ROSLIB.Message({
-            "data": "point_2"
+            "data": "medicine-1" // goto_medicine_1, extend_arm, etc
         })
       
         document.querySelector("#medicine-1").addEventListener("click", () => {cmdVel.publish(msg)})
@@ -58,16 +58,15 @@
         // Subscribing to a Topic
         // ----------------------
       
-        // var listener = new ROSLIB.Topic({
-        //   ros : ros,
-        //   name : '/listener',
-        //   messageType : 'std_msgs/String'
-        // });
+        var listener = new ROSLIB.Topic({
+          ros : ros,
+          name : '/meds_done',
+          messageType : 'std_msgs/String'
+        });
       
-        // listener.subscribe(function(message) {
-        //   console.log('Received message on ' + listener.name + ': ' + message.data);
-        //   listener.unsubscribe();
-        // });
+        listener.subscribe(function(message) {
+          console.log('Done getting medicine!');
+        });
       
         // Calling a service
         // -----------------
